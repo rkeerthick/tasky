@@ -74,7 +74,7 @@ export default async function TasksPage() {
       <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6">
         <TaskList
           initialTasks={tasks.map(serializeTask)}
-          projects={projects.map(serializeProject)}
+          initialProjects={projects.map(serializeProject)}
         />
       </main>
     </div>

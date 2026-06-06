@@ -23,6 +23,7 @@ import {
   useToggleTask,
   useDeleteTask,
 } from "./use-tasks";
+import { useProjectsQuery } from "./use-projects";
 import { FilterBar, type GroupBy, type StatusFilter, type SortMode } from "./filter-bar";
 import { ProjectSidebar, type ViewMode, applyViewFilter } from "./project-sidebar";
 import { AddTaskRow } from "./add-task-row";
@@ -110,11 +111,12 @@ function GroupHeader({ label, color, count }: { label: string; color?: string; c
 
 interface TaskListProps {
   initialTasks: ClientTask[];
-  projects: ClientProject[];
+  initialProjects: ClientProject[];
 }
 
-export function TaskList({ initialTasks, projects }: TaskListProps) {
+export function TaskList({ initialTasks, initialProjects }: TaskListProps) {
   const { data: allTasks = [] } = useTasksQuery(initialTasks);
+  const { data: projects = [] } = useProjectsQuery(initialProjects);
   const { mutate: reorderTasks } = useReorderTasks();
   const { mutate: toggleTask } = useToggleTask();
   const { mutate: deleteTask } = useDeleteTask();
