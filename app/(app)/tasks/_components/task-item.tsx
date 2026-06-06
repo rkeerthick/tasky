@@ -230,12 +230,19 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
         {/* Content area */}
         <div className="min-w-0 flex-1 py-0.5">
           {isEditing ? (
-            <>
+            // onBlur fires when focus leaves any child. relatedTarget is where
+            // focus moved — if it's still inside this container, do nothing.
+            <div
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  saveEdit();
+                }
+              }}
+            >
               <input
                 ref={titleRef}
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
-                onBlur={saveEdit}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") { e.preventDefault(); saveEdit(); }
                   if (e.key === "Escape") cancelEdit();
@@ -287,7 +294,7 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
                   Cancel
                 </button>
               </div>
-            </>
+            </div>
           ) : (
             <>
               <p
