@@ -42,7 +42,8 @@ export default async function TasksPage() {
 
   async function handleSignOut() {
     "use server";
-    await signOut({ redirectTo: "/" });
+    await signOut({ redirect: false });
+    redirect("/signin");
   }
 
   return (
