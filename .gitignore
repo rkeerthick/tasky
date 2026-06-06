@@ -13,6 +13,11 @@
 # testing
 /coverage
 
+# playwright
+/playwright-report/
+/test-results/
+/e2e/.auth/
+
 # next.js
 /.next/
 /out/
@@ -39,3 +44,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma generated client (when using custom output path)
+/app/generated/

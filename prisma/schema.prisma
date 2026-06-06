@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // directUrl bypasses the connection pooler for migrations (required for Neon / pgBouncer).
+  // Set DIRECT_URL to the non-pooling connection string; leave it equal to DATABASE_URL for local dev.
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum TaskStatus {
+  TODO
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// ─── Auth.js required models ─────────────────────────────────────────────────
+// Keep these in sync with @auth/prisma-adapter expectations.
+// Do not add application fields here — extend via the tasks/projects relations.
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+
+  accounts Account[]
+  sessions Session[]
+  tasks    Task[]
+  projects Project[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Application models ───────────────────────────────────────────────────────
+
+model Project {
+  id     String @id @default(cuid())
+  userId String
+  name   String
+  color  String // hex string, e.g. "#6366f1"
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@index([userId])
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  userId      String
+  title       String
+  notes       String?    @db.Text
+  status      TaskStatus @default(TODO)
+  priority    Priority?
+  dueDate     DateTime?
+  order       Float // fractional indexing for manual drag-to-reorder
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime? // null = active; set to soft-delete
+
+  projectId String?
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  // Core access patterns
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, deletedAt]) // filters active tasks (WHERE deletedAt IS NULL)
+  @@index([dueDate])
+  @@index([projectId])
+}

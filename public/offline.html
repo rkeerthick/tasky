@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Offline — Tasky</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      body {
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 2rem;
+        background: #fafafa;
+        color: #18181b;
+        text-align: center;
+      }
+      .icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: #18181b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+      }
+      h1 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
+      p  { font-size: 0.875rem; color: #71717a; max-width: 22rem; line-height: 1.6; }
+      a  {
+        margin-top: 0.5rem;
+        display: inline-block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #18181b;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="icon">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 19L15 27L29 10" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1>You're offline</h1>
+    <p>Tasky needs a network connection. Reconnect and the page will load automatically.</p>
+    <a href="/tasks" onclick="window.location.reload(); return false;">Try again</a>
+  </body>
+</html>
