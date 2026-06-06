@@ -30,7 +30,7 @@ function Chip<T extends string>({
     <button
       onClick={() => onClick(value)}
       className={cn(
-        "flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+        "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
         active
           ? "bg-zinc-900 text-white"
           : "bg-white text-zinc-500 ring-1 ring-zinc-200 hover:bg-zinc-50 hover:text-zinc-700",
@@ -51,9 +51,9 @@ export function FilterBar({
 }: FilterBarProps) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-      {/* Group by */}
-      <div className="flex items-center gap-1.5 overflow-x-auto">
-        <span className="flex-shrink-0 text-xs text-zinc-400">Group</span>
+      {/* Group by — desktop only (pills nav handles date filtering on mobile) */}
+      <div className="hidden items-center gap-1.5 overflow-x-auto sm:flex">
+        <span className="shrink-0 text-xs text-zinc-400">Group</span>
         {(["none", "status", "project"] as const).map((v) => (
           <Chip
             key={v}
@@ -65,17 +65,17 @@ export function FilterBar({
         ))}
       </div>
 
-      {/* Status filter */}
-      <div className="flex items-center gap-1.5 overflow-x-auto">
-        <span className="flex-shrink-0 text-xs text-zinc-400">Show</span>
+      {/* Status filter — desktop only */}
+      <div className="hidden items-center gap-1.5 overflow-x-auto sm:flex">
+        <span className="shrink-0 text-xs text-zinc-400">Show</span>
         <Chip value="all" active={statusFilter === "all"} label="All" onClick={onStatusFilter} />
         <Chip value="TODO" active={statusFilter === "TODO"} label="To do" onClick={onStatusFilter} />
         <Chip value="DONE" active={statusFilter === "DONE"} label="Done" onClick={onStatusFilter} />
       </div>
 
-      {/* Sort */}
+      {/* Sort — always visible */}
       <div className="flex items-center gap-1.5">
-        <span className="flex-shrink-0 text-xs text-zinc-400">Sort</span>
+        <span className="shrink-0 text-xs text-zinc-400">Sort</span>
         <select
           value={sortMode}
           onChange={(e) => onSortMode(e.target.value as SortMode)}

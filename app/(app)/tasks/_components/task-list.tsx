@@ -290,8 +290,8 @@ export function TaskList({ initialTasks, projects }: TaskListProps) {
   }
 
   return (
-    // sm: two-column layout with sidebar; mobile: single column
-    <div className="flex gap-6">
+    // mobile: single column (pills above content); sm+: sidebar + content side-by-side
+    <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
       <ProjectSidebar
         tasks={allTasks}
         projects={projects}
