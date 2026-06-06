@@ -1,6 +1,15 @@
 "use client";
 
 import { useState, useRef, useEffect, type CSSProperties } from "react";
+
+type PriorityValue = "" | "LOW" | "MEDIUM" | "HIGH";
+
+function toDateInputValue(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  // en-CA locale gives YYYY-MM-DD which is what <input type="date"> expects
+  return d.toLocaleDateString("en-CA");
+}
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
@@ -86,6 +95,8 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editNotes, setEditNotes] = useState(task.notes ?? "");
+  const [editDueDate, setEditDueDate] = useState(toDateInputValue(task.dueDate));
+  const [editPriority, setEditPriority] = useState<PriorityValue>(task.priority ?? "");
   const titleRef = useRef<HTMLInputElement>(null);
 
   const { mutate: updateTask } = useUpdateTask();
@@ -96,12 +107,16 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
     if (!isEditing) {
       setEditTitle(task.title);
       setEditNotes(task.notes ?? "");
+      setEditDueDate(toDateInputValue(task.dueDate));
+      setEditPriority(task.priority ?? "");
     }
-  }, [task.title, task.notes, isEditing]);
+  }, [task.title, task.notes, task.dueDate, task.priority, isEditing]);
 
   function openEdit() {
     setEditTitle(task.title);
     setEditNotes(task.notes ?? "");
+    setEditDueDate(toDateInputValue(task.dueDate));
+    setEditPriority(task.priority ?? "");
     setIsEditing(true);
     setTimeout(() => titleRef.current?.focus(), 0);
   }
@@ -113,8 +128,22 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
       setIsEditing(false);
       return;
     }
-    if (trimmed !== task.title || editNotes !== (task.notes ?? "")) {
-      updateTask({ id: task.id, title: trimmed, notes: editNotes.trim() || null });
+    const newDueDate = editDueDate
+      ? new Date(editDueDate + "T00:00:00").toISOString()
+      : null;
+    const changed =
+      trimmed !== task.title ||
+      editNotes !== (task.notes ?? "") ||
+      newDueDate !== task.dueDate ||
+      (editPriority || null) !== task.priority;
+    if (changed) {
+      updateTask({
+        id: task.id,
+        title: trimmed,
+        notes: editNotes.trim() || null,
+        dueDate: newDueDate,
+        priority: editPriority || null,
+      });
     }
     setIsEditing(false);
   }
@@ -122,6 +151,8 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
   function cancelEdit() {
     setEditTitle(task.title);
     setEditNotes(task.notes ?? "");
+    setEditDueDate(toDateInputValue(task.dueDate));
+    setEditPriority(task.priority ?? "");
     setIsEditing(false);
   }
 
@@ -221,6 +252,27 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
                 rows={2}
                 className="mt-1 w-full resize-none bg-transparent text-sm text-zinc-500 outline-none placeholder:text-zinc-300"
               />
+
+              {/* Due date + priority */}
+              <div className="mt-2 flex flex-wrap gap-2">
+                <input
+                  type="date"
+                  value={editDueDate}
+                  onChange={(e) => setEditDueDate(e.target.value)}
+                  className="rounded-lg border-0 bg-zinc-50 px-2 py-1 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-zinc-300"
+                />
+                <select
+                  value={editPriority}
+                  onChange={(e) => setEditPriority(e.target.value as PriorityValue)}
+                  className="rounded-lg border-0 bg-zinc-50 py-1 pl-2 pr-6 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-zinc-300"
+                >
+                  <option value="">Priority</option>
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                </select>
+              </div>
+
               <div className="mt-2 flex gap-3">
                 <button
                   onMouseDown={(e) => { e.preventDefault(); saveEdit(); }}
