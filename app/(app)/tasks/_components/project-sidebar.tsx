@@ -316,12 +316,12 @@ export function ProjectSidebar({
           {viewNav}
 
           {/* Projects section */}
-          <div className="my-1 border-t border-zinc-100" />
+          <div className="my-1 border-t border-zinc-200" />
           <div className="flex items-center justify-between px-2.5 pb-0.5 pt-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">Projects</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Projects</p>
             <button
               onClick={() => { setCreating(true); setEditingId(null); }}
-              className="rounded p-0.5 text-zinc-400 hover:text-zinc-700"
+              className="rounded p-0.5 text-zinc-500 hover:text-zinc-800"
               aria-label="New project"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
@@ -350,7 +350,7 @@ export function ProjectSidebar({
           {creating && <CreateProjectForm onDone={() => setCreating(false)} />}
 
           {projects.length === 0 && !creating && (
-            <p className="px-2.5 py-1 text-xs text-zinc-400">No projects yet</p>
+            <p className="px-2.5 py-1 text-xs text-zinc-500">No projects yet</p>
           )}
         </nav>
       </aside>
