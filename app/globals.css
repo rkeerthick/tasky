@@ -1,33 +1,146 @@
 @import "tailwindcss";
 
+/* ─── Design-system color tokens ───────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Warm stone neutrals (replaces cool zinc throughout the app) */
+  --stone-50:  #faf7f2;
+  --stone-100: #f3ede4;
+  --stone-200: #e7ddd0;
+  --stone-300: #d4c5b3;
+  --stone-400: #b3a08a;
+  --stone-500: #8a7866;
+  --stone-600: #6a5a49;
+  --stone-700: #4d4034;
+  --stone-800: #362d24;
+  --stone-900: #261f18;
+
+  /* Warm white for raised cards */
+  --paper-card: #fffdfa;
+
+  /* Clay — terracotta brand accent */
+  --clay-50:  #fbf1ea;
+  --clay-100: #f6ddcd;
+  --clay-200: #edbb9f;
+  --clay-300: #e09a73;
+  --clay-400: #d57e51;
+  --clay-500: #c4663b;
+  --clay-600: #a8512c;
+  --clay-700: #874023;
+
+  /* Semantic hues */
+  --sage-500:  #6f8f5e;
+  --sage-600:  #587a49;
+  --honey-500: #d39a2c;
+  --honey-600: #b07f1d;
+  --rust-500:  #c0553e;
+  --rust-600:  #a23f2c;
+  --denim-500: #6d8aa6;
+  --denim-600: #557089;
+
+  /* Project / priority accent dots */
+  --accent-terracotta: #c4663b;
+  --accent-clay:       #d57e51;
+  --accent-amber:      #d39a2c;
+  --accent-gold:       #c9a227;
+  --accent-sage:       #7a9266;
+  --accent-teal:       #5a8a7d;
+  --accent-denim:      #6d8aa6;
+  --accent-plum:       #9c6b80;
+  --accent-rose:       #c47b6e;
+
+  /* Semantic aliases */
+  --surface-page:   var(--stone-50);
+  --surface-card:   var(--paper-card);
+  --surface-sunken: var(--stone-100);
+  --surface-ink:    var(--stone-900);
+
+  --border-subtle:  var(--stone-200);
+  --border-default: var(--stone-300);
+  --border-strong:  var(--stone-400);
+
+  --text-strong: var(--stone-900);
+  --text-body:   var(--stone-700);
+  --text-muted:  var(--stone-500);
+  --text-faint:  var(--stone-400);
+
+  --accent:       var(--clay-500);
+  --accent-hover: var(--clay-600);
+  --accent-press: var(--clay-700);
+  --accent-soft:  var(--clay-100);
+  --accent-tint:  var(--clay-50);
+  --ring:         var(--clay-200);
+
+  --success:      var(--sage-500);
+  --warning:      var(--honey-500);
+  --danger:       var(--rust-500);
+  --info:         var(--denim-500);
+
+  --success-soft: #e6eddf;
+  --warning-soft: #f8eccf;
+  --danger-soft:  #f5ddd6;
+  --info-soft:    #e0e8ef;
+
+  /* Shadows — warm brown-tinted */
+  --shadow-xs:    0 1px 2px rgba(38, 31, 24, 0.04);
+  --shadow-sm:    0 1px 3px rgba(38, 31, 24, 0.06), 0 1px 2px rgba(38, 31, 24, 0.04);
+  --shadow-md:    0 4px 14px rgba(38, 31, 24, 0.08);
+  --shadow-focus: 0 0 0 3px var(--ring);
 }
+
+/* ─── Tailwind v4 theme overrides ─────────────────────────────────────────── */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Remap zinc → warm stone so every zinc-* utility renders the warm palette */
+  --color-zinc-50:  var(--stone-50);
+  --color-zinc-100: var(--stone-100);
+  --color-zinc-200: var(--stone-200);
+  --color-zinc-300: var(--stone-300);
+  --color-zinc-400: var(--stone-400);
+  --color-zinc-500: var(--stone-500);
+  --color-zinc-600: var(--stone-600);
+  --color-zinc-700: var(--stone-700);
+  --color-zinc-800: var(--stone-800);
+  --color-zinc-900: var(--stone-900);
+
+  /* Expose clay as a Tailwind color family */
+  --color-clay-50:  var(--clay-50);
+  --color-clay-100: var(--clay-100);
+  --color-clay-200: var(--clay-200);
+  --color-clay-300: var(--clay-300);
+  --color-clay-400: var(--clay-400);
+  --color-clay-500: var(--clay-500);
+  --color-clay-600: var(--clay-600);
+  --color-clay-700: var(--clay-700);
+
+  /* White card surface */
+  --color-white: var(--paper-card);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ─── Base ────────────────────────────────────────────────────────────────── */
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  /* Push content above the iPhone home indicator / Android nav bar */
+  background: var(--surface-page);
+  color: var(--text-body);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Prevent iOS from zooming into inputs smaller than 16 px — set globally */
+/* Prevent iOS zoom on inputs smaller than 16px */
 input, textarea, select {
   font-size: max(16px, 1em);
+}
+
+/* Warm clay focus ring on interactive elements */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Warm text selection */
+::selection {
+  background: var(--clay-200);
+  color: var(--stone-900);
 }

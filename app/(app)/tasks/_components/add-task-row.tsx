@@ -54,7 +54,7 @@ export const AddTaskRow = forwardRef<HTMLInputElement, AddTaskRowProps>(function
         showMeta
           ? "border-zinc-200 shadow-sm"
           : "border-dashed border-zinc-200",
-        "focus-within:border-zinc-300 focus-within:shadow-sm",
+        "focus-within:border-clay-300 focus-within:shadow-sm",
       )}
     >
       {/* Title row */}
@@ -97,13 +97,13 @@ export const AddTaskRow = forwardRef<HTMLInputElement, AddTaskRowProps>(function
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="rounded-lg border-0 bg-zinc-50 px-2 py-1 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-zinc-300"
+            className="rounded-lg border-0 bg-zinc-50 px-2 py-1 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-clay-200"
           />
 
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value as PriorityValue)}
-            className="rounded-lg border-0 bg-zinc-50 py-1 pl-2 pr-6 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-zinc-300"
+            className="rounded-lg border-0 bg-zinc-50 py-1 pl-2 pr-6 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-clay-200"
           >
             <option value="">Priority</option>
             <option value="LOW">Low</option>
@@ -115,7 +115,7 @@ export const AddTaskRow = forwardRef<HTMLInputElement, AddTaskRowProps>(function
             <select
               value={effectiveProjectId}
               onChange={(e) => setProjectId(e.target.value)}
-              className="rounded-lg border-0 bg-zinc-50 py-1 pl-2 pr-6 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-zinc-300"
+              className="rounded-lg border-0 bg-zinc-50 py-1 pl-2 pr-6 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-clay-200"
             >
               <option value="">No project</option>
               {projects.map((p) => (

@@ -45,9 +45,9 @@ function formatDueDate(iso: string): { text: string; cls: string } {
   const dueMidnight = new Date(due.getFullYear(), due.getMonth(), due.getDate());
   const diff = Math.round((dueMidnight.getTime() - todayMidnight.getTime()) / 86_400_000);
 
-  if (diff < 0) return { text: `${Math.abs(diff)}d late`, cls: "text-red-500" };
-  if (diff === 0) return { text: "Today", cls: "text-amber-500 font-medium" };
-  if (diff === 1) return { text: "Tomorrow", cls: "text-sky-500" };
+  if (diff < 0) return { text: `${Math.abs(diff)}d late`, cls: "text-[--rust-500]" };
+  if (diff === 0) return { text: "Today", cls: "text-[--honey-600] font-medium" };
+  if (diff === 1) return { text: "Tomorrow", cls: "text-[--denim-600]" };
   if (diff < 7) return { text: `${diff}d`, cls: "text-zinc-400" };
   return {
     text: due.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
@@ -58,9 +58,9 @@ function formatDueDate(iso: string): { text: string; cls: string } {
 // ─── Priority badge ───────────────────────────────────────────────────────────
 
 const PRIORITY: Record<Priority, { label: string; dot: string; text: string }> = {
-  HIGH: { label: "High", dot: "bg-red-500", text: "text-red-500" },
-  MEDIUM: { label: "Med", dot: "bg-amber-400", text: "text-amber-500" },
-  LOW: { label: "Low", dot: "bg-sky-400", text: "text-sky-400" },
+  HIGH: { label: "High", dot: "bg-[--rust-500]", text: "text-[--rust-500]" },
+  MEDIUM: { label: "Med", dot: "bg-[--honey-500]", text: "text-[--honey-600]" },
+  LOW: { label: "Low", dot: "bg-[--denim-400]", text: "text-[--denim-500]" },
 };
 
 function PriorityBadge({ priority }: { priority: Priority }) {
@@ -187,7 +187,7 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
         isDragging
           ? "z-50 border-zinc-300 shadow-lg opacity-90"
           : isSelected
-            ? "border-zinc-300 ring-2 ring-zinc-200"
+            ? "border-zinc-300 ring-2 ring-clay-200"
             : "border-zinc-100 hover:border-zinc-200 hover:shadow-sm",
         done && !isEditing && "opacity-60",
       )}
@@ -203,11 +203,11 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
         {/* Checkbox — 44 × 44 touch target via negative margin + padding */}
         <button
           onClick={() => toggleTask(task.id)}
-          className="-m-2 shrink-0 p-2 text-zinc-300 hover:text-zinc-500"
+          className="-m-2 shrink-0 p-2 text-zinc-300 hover:text-zinc-500 active:scale-90 transition-transform"
           aria-label={done ? "Mark as to do" : "Mark as done"}
         >
           {done ? (
-            <svg className="h-5 w-5 text-zinc-400" viewBox="0 0 20 20" fill="currentColor">
+            <svg className="h-5 w-5 text-clay-500" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fillRule="evenodd"
                 d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
@@ -266,12 +266,12 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
                   type="date"
                   value={editDueDate}
                   onChange={(e) => setEditDueDate(e.target.value)}
-                  className="rounded-lg border-0 bg-zinc-50 px-2 py-1 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-zinc-300"
+                  className="rounded-lg border-0 bg-zinc-50 px-2 py-1 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-clay-200"
                 />
                 <select
                   value={editPriority}
                   onChange={(e) => setEditPriority(e.target.value as PriorityValue)}
-                  className="rounded-lg border-0 bg-zinc-50 py-1 pl-2 pr-6 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-zinc-300"
+                  className="rounded-lg border-0 bg-zinc-50 py-1 pl-2 pr-6 text-xs text-zinc-500 ring-1 ring-zinc-200 focus:outline-none focus:ring-clay-200"
                 >
                   <option value="">Priority</option>
                   <option value="LOW">Low</option>
@@ -353,7 +353,7 @@ export function TaskItem({ task, project, isSelected, onSelect, showDragHandle =
               fades in on hover for mouse users */}
           <button
             onClick={() => deleteTask(task.id)}
-            className="-m-1 p-1 text-zinc-300 opacity-30 transition-opacity hover:text-red-400 hover:opacity-100 focus:opacity-100 group-hover:opacity-100 sm:opacity-0"
+            className="-m-1 p-1 text-zinc-300 opacity-30 transition-opacity hover:text-[--rust-500] hover:opacity-100 focus:opacity-100 group-hover:opacity-100 sm:opacity-0"
             aria-label="Delete task"
           >
             <TrashIcon />

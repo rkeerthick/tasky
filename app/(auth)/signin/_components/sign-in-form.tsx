@@ -8,7 +8,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50"
+      className="w-full rounded-xl bg-clay-500 px-4 py-2.5 text-sm font-medium text-[--paper-card] transition-colors hover:bg-clay-600 disabled:opacity-50"
     >
       {pending ? "Sending link…" : "Send magic link"}
     </button>
@@ -41,7 +41,7 @@ export function SignInForm({ action, error }: SignInFormProps) {
           autoComplete="email"
           required
           placeholder="you@example.com"
-          className="mt-1.5 w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-200"
+          className="mt-1.5 w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-clay-400 focus:outline-none focus:ring-2 focus:ring-clay-200"
         />
       </div>
 
