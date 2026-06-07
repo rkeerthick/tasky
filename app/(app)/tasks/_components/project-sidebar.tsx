@@ -357,86 +357,96 @@ export function ProjectSidebar({
 
       {/* ── Mobile: horizontal scrolling tab bar ── */}
       <div className="-mx-4 sm:hidden">
-        {/* Tab strip */}
-        <div
-          role="navigation"
-          className="flex gap-2 overflow-x-auto border-b border-zinc-100 px-4 pb-2 pt-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {(
-            [
-              { mode: "all" as ViewMode, label: "All", count: counts.all },
-              { mode: "today" as ViewMode, label: "Today", count: counts.today },
-              { mode: "upcoming" as ViewMode, label: "Upcoming", count: counts.upcoming },
-              { mode: "no-date" as ViewMode, label: "No date", count: counts.noDate },
-            ] as const
-          ).map(({ mode, label, count }) => {
-            const isActive = viewMode === mode && (mode !== "all" || projectFilter === null);
-            return (
-              <button
-                key={mode}
-                onClick={() => { onViewMode(mode); onProjectFilter(null); }}
-                className={cn(
-                  "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors",
-                  isActive
-                    ? "bg-zinc-900 text-white"
-                    : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900",
-                )}
-              >
-                {label}
-                {count > 0 && (
-                  <span className={cn(
-                    "rounded-full px-1.5 py-px text-[10px] font-semibold tabular-nums",
-                    isActive ? "bg-white/20 text-white" : "bg-zinc-200 text-zinc-500",
-                  )}>
-                    {count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-
-          {/* Divider between views and projects */}
-          {projects.length > 0 && (
-            <span className="mx-0.5 my-1.5 w-px shrink-0 bg-zinc-200" aria-hidden />
-          )}
-
-          {projects.map((p) => {
-            const isActive = projectFilter === p.id;
-            const count = projectCounts.get(p.id) ?? 0;
-            return (
-              <button
-                key={p.id}
-                onClick={() => { onViewMode("all"); onProjectFilter(p.id); }}
-                className={cn(
-                  "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors",
-                  isActive
-                    ? "bg-zinc-900 text-white"
-                    : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900",
-                )}
-              >
-                <span
-                  className="h-2 w-2 shrink-0 rounded-full"
-                  style={{ backgroundColor: isActive ? "white" : p.color }}
-                />
-                {p.name}
-                {count > 0 && (
-                  <span className={cn(
-                    "rounded-full px-1.5 py-px text-[10px] font-semibold tabular-nums",
-                    isActive ? "bg-white/20 text-white" : "bg-zinc-200 text-zinc-500",
-                  )}>
-                    {count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-
-          <button
-            onClick={() => setCreating(true)}
-            className="flex h-8 shrink-0 items-center gap-1 rounded-full border border-dashed border-clay-300 px-3.5 text-xs font-medium text-clay-600 hover:bg-clay-50 transition-colors"
+        {/* Row: scrolling pills + always-visible "+ Project" button */}
+        <div className="flex items-center border-b border-zinc-100">
+          {/* Scrolling pill strip */}
+          <div
+            role="navigation"
+            className="flex min-w-0 flex-1 gap-2 overflow-x-auto px-4 pb-2 pt-0.5 scrollbar-none"
           >
-            + Project
-          </button>
+            {(
+              [
+                { mode: "all" as ViewMode, label: "All", count: counts.all },
+                { mode: "today" as ViewMode, label: "Today", count: counts.today },
+                { mode: "upcoming" as ViewMode, label: "Upcoming", count: counts.upcoming },
+                { mode: "no-date" as ViewMode, label: "No date", count: counts.noDate },
+              ] as const
+            ).map(({ mode, label, count }) => {
+              const isActive = viewMode === mode && (mode !== "all" || projectFilter === null);
+              return (
+                <button
+                  key={mode}
+                  onClick={() => { onViewMode(mode); onProjectFilter(null); }}
+                  className={cn(
+                    "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors",
+                    isActive
+                      ? "bg-zinc-900 text-white"
+                      : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900",
+                  )}
+                >
+                  {label}
+                  {count > 0 && (
+                    <span className={cn(
+                      "rounded-full px-1.5 py-px text-[10px] font-semibold tabular-nums",
+                      isActive ? "bg-white/20 text-white" : "bg-zinc-200 text-zinc-500",
+                    )}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+
+            {/* Divider between views and projects */}
+            {projects.length > 0 && (
+              <span className="mx-0.5 my-1.5 w-px shrink-0 bg-zinc-200" aria-hidden />
+            )}
+
+            {projects.map((p) => {
+              const isActive = projectFilter === p.id;
+              const count = projectCounts.get(p.id) ?? 0;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => { onViewMode("all"); onProjectFilter(p.id); }}
+                  className={cn(
+                    "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors",
+                    isActive
+                      ? "bg-zinc-900 text-white"
+                      : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900",
+                  )}
+                >
+                  <span
+                    className="h-2 w-2 shrink-0 rounded-full"
+                    style={{ backgroundColor: isActive ? "white" : p.color }}
+                  />
+                  {p.name}
+                  {count > 0 && (
+                    <span className={cn(
+                      "rounded-full px-1.5 py-px text-[10px] font-semibold tabular-nums",
+                      isActive ? "bg-white/20 text-white" : "bg-zinc-200 text-zinc-500",
+                    )}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Always-visible + Project button — pinned to right, never scrolls away */}
+          <div className="shrink-0 border-l border-zinc-100 px-3 pb-2 pt-0.5">
+            <button
+              onClick={() => setCreating(true)}
+              className="flex h-8 items-center gap-1 rounded-full bg-zinc-100 px-3 text-xs font-medium text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-zinc-800"
+              aria-label="New project"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+                <path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z" />
+              </svg>
+              Project
+            </button>
+          </div>
         </div>
 
         {/* Mobile create form — below the strip */}
