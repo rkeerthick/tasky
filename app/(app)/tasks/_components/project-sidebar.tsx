@@ -10,8 +10,8 @@ export type ViewMode = "all" | "today" | "upcoming" | "no-date";
 // ─── Color palette ────────────────────────────────────────────────────────────
 
 const COLORS = [
-  "#6366f1", "#8b5cf6", "#ec4899", "#ef4444",
-  "#f97316", "#eab308", "#22c55e", "#06b6d4", "#3b82f6",
+  "#c4663b", "#d57e51", "#d39a2c", "#c9a227",
+  "#7a9266", "#5a8a7d", "#6d8aa6", "#9c6b80", "#c47b6e",
 ];
 
 // ─── View-mode helpers ────────────────────────────────────────────────────────
@@ -355,73 +355,97 @@ export function ProjectSidebar({
         </nav>
       </aside>
 
-      {/* ── Mobile: horizontal scrolling pills ── */}
-      <div className="flex gap-1.5 overflow-x-auto pb-1 sm:hidden" role="navigation">
-        {(
-          [
-            { mode: "all" as ViewMode, label: "All", count: counts.all },
-            { mode: "today" as ViewMode, label: "Today", count: counts.today },
-            { mode: "upcoming" as ViewMode, label: "Upcoming", count: counts.upcoming },
-            { mode: "no-date" as ViewMode, label: "No date", count: counts.noDate },
-          ] as const
-        ).map(({ mode, label, count }) => {
-          const isActive = viewMode === mode && (mode !== "all" || projectFilter === null);
-          return (
-            <button
-              key={mode}
-              onClick={() => { onViewMode(mode); onProjectFilter(null); }}
-              className={cn(
-                "flex shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                isActive ? "bg-zinc-900 text-white" : "bg-white text-zinc-500 ring-1 ring-zinc-200",
-              )}
-            >
-              {label}
-              {count > 0 && (
-                <span className={cn("rounded-full px-1 text-xs", isActive ? "text-white/70" : "text-zinc-400")}>
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
-
-        {projects.map((p) => {
-          const isActive = projectFilter === p.id;
-          const count = projectCounts.get(p.id) ?? 0;
-          return (
-            <button
-              key={p.id}
-              onClick={() => { onViewMode("all"); onProjectFilter(p.id); }}
-              className={cn(
-                "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                isActive ? "bg-zinc-900 text-white" : "bg-white text-zinc-500 ring-1 ring-zinc-200",
-              )}
-            >
-              <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ backgroundColor: p.color }} />
-              {p.name}
-              {count > 0 && (
-                <span className={cn("text-xs", isActive ? "text-white/70" : "text-zinc-400")}>{count}</span>
-              )}
-            </button>
-          );
-        })}
-
-        <button
-          onClick={() => setCreating(true)}
-          className="flex shrink-0 items-center gap-1 rounded-full bg-white px-3 py-1.5 text-xs font-medium text-zinc-400 ring-1 ring-dashed ring-zinc-200"
+      {/* ── Mobile: horizontal scrolling tab bar ── */}
+      <div className="-mx-4 sm:hidden">
+        {/* Tab strip */}
+        <div
+          role="navigation"
+          className="flex gap-2 overflow-x-auto border-b border-zinc-100 px-4 pb-2 pt-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          + Project
-        </button>
+          {(
+            [
+              { mode: "all" as ViewMode, label: "All", count: counts.all },
+              { mode: "today" as ViewMode, label: "Today", count: counts.today },
+              { mode: "upcoming" as ViewMode, label: "Upcoming", count: counts.upcoming },
+              { mode: "no-date" as ViewMode, label: "No date", count: counts.noDate },
+            ] as const
+          ).map(({ mode, label, count }) => {
+            const isActive = viewMode === mode && (mode !== "all" || projectFilter === null);
+            return (
+              <button
+                key={mode}
+                onClick={() => { onViewMode(mode); onProjectFilter(null); }}
+                className={cn(
+                  "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors",
+                  isActive
+                    ? "bg-zinc-900 text-white"
+                    : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900",
+                )}
+              >
+                {label}
+                {count > 0 && (
+                  <span className={cn(
+                    "rounded-full px-1.5 py-px text-[10px] font-semibold tabular-nums",
+                    isActive ? "bg-white/20 text-white" : "bg-zinc-200 text-zinc-500",
+                  )}>
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
 
-        {/* Mobile create form — rendered below pills when active */}
-      </div>
+          {/* Divider between views and projects */}
+          {projects.length > 0 && (
+            <span className="mx-0.5 my-1.5 w-px shrink-0 bg-zinc-200" aria-hidden />
+          )}
 
-      {/* Mobile create form */}
-      {creating && (
-        <div className="sm:hidden">
-          <CreateProjectForm onDone={() => setCreating(false)} />
+          {projects.map((p) => {
+            const isActive = projectFilter === p.id;
+            const count = projectCounts.get(p.id) ?? 0;
+            return (
+              <button
+                key={p.id}
+                onClick={() => { onViewMode("all"); onProjectFilter(p.id); }}
+                className={cn(
+                  "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors",
+                  isActive
+                    ? "bg-zinc-900 text-white"
+                    : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900",
+                )}
+              >
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: isActive ? "white" : p.color }}
+                />
+                {p.name}
+                {count > 0 && (
+                  <span className={cn(
+                    "rounded-full px-1.5 py-px text-[10px] font-semibold tabular-nums",
+                    isActive ? "bg-white/20 text-white" : "bg-zinc-200 text-zinc-500",
+                  )}>
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => setCreating(true)}
+            className="flex h-8 shrink-0 items-center gap-1 rounded-full border border-dashed border-clay-300 px-3.5 text-xs font-medium text-clay-600 hover:bg-clay-50 transition-colors"
+          >
+            + Project
+          </button>
         </div>
-      )}
+
+        {/* Mobile create form — below the strip */}
+        {creating && (
+          <div className="px-4 pt-3">
+            <CreateProjectForm onDone={() => setCreating(false)} />
+          </div>
+        )}
+      </div>
     </>
   );
 }
